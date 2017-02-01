@@ -7,6 +7,7 @@ $url = ARGV[0]
 $user = ARGV[1]
 $password = ARGV[2]
 $morning_hour = 9
+$number_of_previous_days_to_print = 3
 
 if ARGV.count != 3
     puts 'wrong number of parameters'.red
@@ -102,8 +103,7 @@ print "today: ".light_blue, "#{today_date_morning.strftime("%d-%m-%Y")} ", hours
 puts
 puts
 
-#change till number here to print many previous days
-for i in 1..30
+for i in 1..$number_of_previous_days_to_print
     from = today_date_morning.next_day(-i)
     till = today_date_morning.next_day(-i + 1)
     hours = filter_worklogs(issues, false, from, till)
