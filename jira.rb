@@ -20,7 +20,7 @@ def date_to_str(date)
 end
 
 def hours_to_str(hours)
-    return "#{hours} #{hours == 1 ? 'hour' : 'hours'}".green
+    return "#{hours > 9 ? '' : ' '}#{hours} #{hours == 1 ? 'hour' : 'hours'}".green
 end
 
 def parse_date(date_str)
@@ -103,12 +103,12 @@ puts
 puts
 
 #change till number here to print many previous days
-for i in 1..3
+for i in 1..30
     from = today_date_morning.next_day(-i)
     till = today_date_morning.next_day(-i + 1)
     hours = filter_worklogs(issues, false, from, till)
     if hours > 0
-        print "#{from.strftime("%d-%m-%Y")} total hours: ", hours_to_str(hours)
+        print "#{from.strftime("%d-%m-%Y")} ", hours_to_str(hours)
         puts
     end
 end
