@@ -36,10 +36,32 @@ def get_number_of_days(date = Date.today)
 end
 
 def load_issues
+    result_issues = []
+
+    start = 0
+    loop do
+        result = load_issues_with_start(start)
+        issues = result["issues"]
+
+        startAt = result["startAt"]
+        maxResults = result["maxResults"]
+        total = result["total"]
+        result_issues += issues
+
+        start = startAt + maxResults
+        if start >= total
+            break
+        end
+    end
+
+    return result_issues
+end
+
+def load_issues_with_start(start)
     request = {
         "jql": "worklogAuthor = currentUser()",
-        "startAt": 0,
-        "maxResults": 1000,
+        "startAt": start,
+        "maxResults": 100,
         "fields": [
             "project",
             "summary",
@@ -49,7 +71,11 @@ def load_issues
         ]
     }
 
+
     c = Curl::Easy.http_post("#{$url}/rest/api/2/search", request.to_json)
+    # puts "#{$url}/rest/api/2/search"
+    # puts request.to_json
+
     c.http_auth_types = :basic
     c.headers["Content-Type"] = "application/json"
     c.username = $user
@@ -58,13 +84,14 @@ def load_issues
     c.perform
     result =  JSON.parse(c.body_str)
 
-    issues = result["issues"]
-    return issues
+    return result
 end
 
 def filter_worklogs(issues, print_issues, date_start, date_end)
 
     total_time = 0
+
+    hours_cache = {}
 
     issues.each do |issue|
         if issue["fields"]["worklog"]["worklogs"].nil?
@@ -81,9 +108,24 @@ def filter_worklogs(issues, print_issues, date_start, date_end)
             end
 
             total_time += worklog["timeSpentSeconds"]
-            if print_issues
-                puts "#{issue["key"]} - [#{worklog["timeSpent"]}] - #{issue["fields"]["summary"]} - #{date_to_str(date)}"
+
+            key = issue["key"]
+            if hours_cache[key].nil? 
+                hours_cache[key] = 0
             end
+            hours_cache[key] += worklog["timeSpentSeconds"]
+
+            if print_issues
+                puts "#{key} - [#{worklog["timeSpent"]}] - #{issue["fields"]["summary"]} - #{date_to_str(date)}"
+            end
+        end
+    end
+
+
+    if print_issues
+        puts "Hours by issues:"
+        hours_cache.keys.sort.each do |key|
+            puts "[#{key}]-----#{hours_cache[key]/3600}h"
         end
     end
 
