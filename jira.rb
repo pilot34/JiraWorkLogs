@@ -148,7 +148,7 @@ puts
 for i in 1..$number_of_previous_days_to_print
     from = today_date_morning.next_day(-i)
     till = today_date_morning.next_day(-i + 1)
-    hours = filter_worklogs(issues, false, from, till)
+    hours = filter_worklogs(issues, i == 1, from, till)
     if hours > 0
         print "#{from.strftime("%d-%m-%Y")} ", hours_to_str(hours)
         puts
