@@ -48,7 +48,7 @@ def load_issues
         total = result["total"]
         result_issues += issues
 
-        start = startAt + maxResults
+        start = startAt + issues.count
         if start >= total
             break
         end
@@ -94,9 +94,14 @@ def filter_worklogs(issues, print_issues, date_start, date_end)
     hours_cache = {}
 
     issues.each do |issue|
-        if issue["fields"]["worklog"]["worklogs"].nil?
+        if issue["fields"].nil? or issue["fields"]["worklog"].nil? or issue["fields"]["worklog"]["worklogs"].nil?
             next
         end
+
+        if issue["fields"]["worklog"]["total"] > issue["fields"]["worklog"]["maxResults"]
+            print "Number of worklogs limit exceeded in task: #{issue["key"]} (#{issue["fields"]["worklog"]["total"]})".red
+        end
+
         issue["fields"]["worklog"]["worklogs"].each do |worklog|
             if worklog["author"]["emailAddress"] != $user and worklog["author"]["name"] != $user
                 next
