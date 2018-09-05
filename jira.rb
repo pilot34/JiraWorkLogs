@@ -175,6 +175,13 @@ print "prev month ".magenta, hours_to_str(prev_month_hours)
 puts
 puts
 
+custom_date_start = Date.parse('28-06-2018')
+custom_date_end = Date.parse('26-07-2018')
+custom_date_hours = filter_worklogs(issues, false, custom_date_start, custom_date_end)
+print "custom range ".magenta, "#{custom_date_start.strftime("%d-%m-%Y")} –– #{custom_date_end.strftime("%d-%m-%Y")} ".yellow, hours_to_str(custom_date_hours)
+puts
+puts
+
 
 infinite_early_date = today_date_midnight - 50 * 365
 infinite_late_date = today_date_midnight + 50 * 365
@@ -182,3 +189,11 @@ total_hours = filter_worklogs(issues, false, infinite_early_date, infinite_late_
 print "overall ".cyan, hours_to_str(total_hours)
 puts
 puts
+
+puts
+
+# date_start = Date.parse('28-01-2018')
+# date_end = Date.today + 1
+# hours = filter_worklogs(issues, true, date_start, date_end)
+# print "month ".magenta, hours_to_str(hours)
+# puts
