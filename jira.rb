@@ -9,10 +9,15 @@ $password = ARGV[2]
 $morning_hour = 9
 $number_of_previous_days_to_print = 3
 
-if ARGV.count != 3
+$custom_date_range_from = ARGV.count > 3 ? ARGV[3] : nil
+$custom_date_range_till = ARGV.count > 4 ? ARGV[4] : nil
+
+if ARGV.count != 3 and ARGV.count != 5
     puts 'wrong number of parameters'.red
     puts 'USAGE:'.green
     puts 'ruby jira.rb http://yourjira.atlassian.net your@gmail.com yourpassword'
+    puts 'OR:'.green
+    puts 'ruby jira.rb http://yourjira.atlassian.net your@gmail.com yourpassword 04-09-2018 04-10-2018'
     exit(0)
 end
 
@@ -175,12 +180,14 @@ print "prev month ".magenta, hours_to_str(prev_month_hours)
 puts
 puts
 
-custom_date_start = Date.parse('28-06-2018')
-custom_date_end = Date.parse('26-07-2018')
-custom_date_hours = filter_worklogs(issues, false, custom_date_start, custom_date_end)
-print "custom range ".magenta, "#{custom_date_start.strftime("%d-%m-%Y")} –– #{custom_date_end.strftime("%d-%m-%Y")} ".yellow, hours_to_str(custom_date_hours)
-puts
-puts
+if not $custom_date_range_from.nil? and not $custom_date_range_till.nil?
+    custom_date_start = Date.parse($custom_date_range_from)
+    custom_date_end = Date.parse($custom_date_range_till)
+    custom_date_hours = filter_worklogs(issues, true, custom_date_start, custom_date_end)
+    print "custom range ".magenta, "#{custom_date_start.strftime("%d-%m-%Y")} –– #{custom_date_end.strftime("%d-%m-%Y")} ".yellow, hours_to_str(custom_date_hours)
+    puts
+    puts
+end
 
 
 infinite_early_date = today_date_midnight - 50 * 365
