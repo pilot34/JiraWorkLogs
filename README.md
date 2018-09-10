@@ -57,4 +57,4 @@ gem install json curb command_line_reporter
 
 Output:
 
-![](https://preview.ibb.co/db2Vh9/Screen_Shot_2018_09_10_at_23_31_10.png)
+![](https://preview.ibb.co/igv8Kp/1.png)
