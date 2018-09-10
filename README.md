@@ -1,4 +1,6 @@
 # JiraWorkLogs
+
+## jira.rb
 Ruby script to load work logs from Jira Cloud through the API without a paid Tempo plugin (total logged time in the time tracking section)
 
 Run 
@@ -34,3 +36,25 @@ prev month 138 hours
 
 overall 175 hours
 ```
+
+
+## estimates.rb
+Ruby script to analyze your time estimation quality. Gives you a list of issues with a spent time, an estimate and their ratio in percents.
+
+Run
+```bash
+ruby estimates.rb https://yourjira.atlassian.net yourmail@gmail.com yourpassword
+``` 
+or
+```bash
+ruby estimates.rb https://yourjiradomain.com yourusername yourpassword
+``` 
+
+You should install some gems before that:
+```bash
+gem install json curb command_line_reporter
+```
+
+Output:
+
+![](https://preview.ibb.co/db2Vh9/Screen_Shot_2018_09_10_at_23_31_10.png)
